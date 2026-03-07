@@ -20,10 +20,10 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: npm ci
 
       - name: Generate TS Protobuf
-        run: bun run generate
+        run: npm run generate
 
       - name: Publish package
         run: npm publish --access public
