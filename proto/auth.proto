@@ -17,7 +17,12 @@ service AuthService {
 
 message SendOtpRequest {
   string identifier = 1;
-  string type       = 2;
+  Type   type       = 2;
+}
+
+enum Type {
+  PHONE = 0;
+  EMAIL = 1;
 }
 
 message SendOtpResponse {
@@ -26,7 +31,7 @@ message SendOtpResponse {
 
 message VerifyOtpRequest {
   string identifier = 1;
-  string type       = 2;
+  Type type       = 2;
   string code       = 3;
 }
 
