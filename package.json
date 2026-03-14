@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "generate": "protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs=true,package=omit,stringEnums=true"
+    "generate": "protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs=true,package=omit,stringEnums=true,unrecognizedEnum=false,outputServices=grpc-js,useOptionals=messages,returnObservable=false,esModuleInterop=true"
   },
   "files": [
     "dist",

@@ -7,12 +7,19 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import { Empty } from "./google/protobuf/empty";
 
 export const protobufPackage = "auth.v1";
 
+export enum Type {
+  PHONE = "PHONE",
+  EMAIL = "EMAIL",
+  UNRECOGNIZED = "UNRECOGNIZED",
+}
+
 export interface SendOtpRequest {
   identifier: string;
-  type: string;
+  type: Type;
 }
 
 export interface SendOtpResponse {
@@ -21,7 +28,7 @@ export interface SendOtpResponse {
 
 export interface VerifyOtpRequest {
   identifier: string;
-  type: string;
+  type: Type;
   code: string;
 }
 
@@ -39,6 +46,43 @@ export interface RefreshResponse {
   refreshToken: string;
 }
 
+export interface TelegramInitResponse {
+  url: string;
+}
+
+export interface TelegramVerifyRequest {
+  query: { [key: string]: string };
+}
+
+export interface TelegramVerifyRequest_QueryEntry {
+  key: string;
+  value: string;
+}
+
+export interface TelegramVerifyResponse {
+  url?: string | undefined;
+  accessToken?: string | undefined;
+  refreshToken?: string | undefined;
+}
+
+export interface TelegramCompleteRequest {
+  sessionId: string;
+  phone: string;
+}
+
+export interface TelegramCompleteResponse {
+  sessionId: string;
+}
+
+export interface TelegramConsumeRequest {
+  sessionId: string;
+}
+
+export interface TelegramConsumeResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export const AUTH_V1_PACKAGE_NAME = "auth.v1";
 
 export interface AuthServiceClient {
@@ -47,6 +91,14 @@ export interface AuthServiceClient {
   verifyOtp(request: VerifyOtpRequest): Observable<VerifyOtpResponse>;
 
   refresh(request: RefreshRequest): Observable<RefreshResponse>;
+
+  telegramInit(request: Empty): Observable<TelegramInitResponse>;
+
+  telegramVerify(request: TelegramVerifyRequest): Observable<TelegramVerifyResponse>;
+
+  telegramComplete(request: TelegramCompleteRequest): Observable<TelegramCompleteResponse>;
+
+  telegramConsume(request: TelegramConsumeRequest): Observable<TelegramConsumeResponse>;
 }
 
 export interface AuthServiceController {
@@ -55,11 +107,33 @@ export interface AuthServiceController {
   verifyOtp(request: VerifyOtpRequest): Promise<VerifyOtpResponse> | Observable<VerifyOtpResponse> | VerifyOtpResponse;
 
   refresh(request: RefreshRequest): Promise<RefreshResponse> | Observable<RefreshResponse> | RefreshResponse;
+
+  telegramInit(request: Empty): Promise<TelegramInitResponse> | Observable<TelegramInitResponse> | TelegramInitResponse;
+
+  telegramVerify(
+    request: TelegramVerifyRequest,
+  ): Promise<TelegramVerifyResponse> | Observable<TelegramVerifyResponse> | TelegramVerifyResponse;
+
+  telegramComplete(
+    request: TelegramCompleteRequest,
+  ): Promise<TelegramCompleteResponse> | Observable<TelegramCompleteResponse> | TelegramCompleteResponse;
+
+  telegramConsume(
+    request: TelegramConsumeRequest,
+  ): Promise<TelegramConsumeResponse> | Observable<TelegramConsumeResponse> | TelegramConsumeResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["sendOtp", "verifyOtp", "refresh"];
+    const grpcMethods: string[] = [
+      "sendOtp",
+      "verifyOtp",
+      "refresh",
+      "telegramInit",
+      "telegramVerify",
+      "telegramComplete",
+      "telegramConsume",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);
