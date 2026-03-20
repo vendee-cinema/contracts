@@ -1,12 +1,12 @@
 {
   "name": "@vendee-cinema/contracts",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Protobuf definitions and generated TypeScript types",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "generate": "protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs=true,package=omit,stringEnums=true,unrecognizedEnum=false,outputServices=grpc-js,useOptionals=messages,esModuleInterop=true"
+    "generate": "protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen/ts --ts_proto_opt=nestJs=true,package=omit,stringEnums=true,unrecognizedEnum=false,outputServices=grpc-js,useOptionals=messages,esModuleInterop=true"
   },
   "files": [
     "dist",
