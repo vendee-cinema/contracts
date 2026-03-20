@@ -24,8 +24,8 @@ jobs:
 
       - name: Install Go Protobuf plugins
         run: |
-          go install google.golang.org/protobuf/cmd/protoc-gen-go@1.5.4 
-          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@1.6.1
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
       - name: Generate Go Protobuf
         run: bash ./scripts/generate_go.sh
