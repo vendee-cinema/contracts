@@ -5,14 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./account": "./dist/account.js",
-    "./auth": "./dist/auth.js",
-    "./category": "./dist/category.js",
-    "./media": "./dist/media.js",
-    "./movie": "./dist/movie.js",
-    "./theater": "./dist/theater.js",
-    "./user": "./dist/user.js"
+    ".": "./dist/src/index.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
