@@ -1,1 +1,1 @@
-export * from '../gen/ts/media';
+export * from './generated/ts/media';

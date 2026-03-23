@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "generate": "protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen/ts --ts_proto_opt=nestJs=true,package=omit,stringEnums=true,unrecognizedEnum=false,outputServices=grpc-js,useOptionals=messages,esModuleInterop=true",
+    "generate": "protoc -I ./proto ./proto/*.proto --ts_proto_out=./src/generated/ts --ts_proto_opt=nestJs=true,package=omit,stringEnums=true,unrecognizedEnum=false,outputServices=grpc-js,useOptionals=messages,esModuleInterop=true",
     "prepare": "npm run generate && npm run build"
   },
   "files": [

@@ -1,1 +1,1 @@
-export * from '../gen/ts/user';
+export * from './generated/ts/user';

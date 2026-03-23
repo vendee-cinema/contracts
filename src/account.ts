@@ -1,2 +1,2 @@
-export * from '../gen/ts/account';
+export * from './generated/ts/account';
 export * from './events/account';

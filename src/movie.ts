@@ -1,1 +1,1 @@
-export * from '../gen/ts/movie';
+export * from './generated/ts/movie';

@@ -1,1 +1,1 @@
-export * from '../gen/ts/theater';
+export * from './generated/ts/theater';
