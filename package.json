@@ -5,14 +5,14 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/src/index.js",
-    "./account": "./dist/src/account.js",
-    "./auth": "./dist/src/auth.js",
-    "./category": "./dist/src/category.js",
-    "./media": "./dist/src/media.js",
-    "./movie": "./dist/src/movie.js",
-    "./theater": "./dist/src/theater.js",
-    "./user": "./dist/src/user.js"
+    ".": "./dist/index.js",
+    "./account": "./dist/account.js",
+    "./auth": "./dist/auth.js",
+    "./category": "./dist/category.js",
+    "./media": "./dist/media.js",
+    "./movie": "./dist/movie.js",
+    "./theater": "./dist/theater.js",
+    "./user": "./dist/user.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
