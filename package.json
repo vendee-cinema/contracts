@@ -9,9 +9,11 @@
     "./account": "./dist/account.js",
     "./auth": "./dist/auth.js",
     "./category": "./dist/category.js",
+    "./empty": "./dist/empty.js",
     "./media": "./dist/media.js",
     "./movie": "./dist/movie.js",
     "./theater": "./dist/theater.js",
+    "./timestamp": "./dist/timestamp.js",
     "./user": "./dist/user.js"
   },
   "scripts": {
