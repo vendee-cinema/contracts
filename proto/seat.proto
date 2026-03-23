@@ -4,7 +4,7 @@ package seat.v1;
 
 service SeatService {
   rpc GetSeat (GetSeatRequest) returns (GetSeatResponse);
-  rpc ListSeatsByHall (ListSeatsRequest) returns (GetSeatsResponse);
+  rpc ListSeatsByHall (ListSeatsRequest) returns (ListSeatsResponse);
 }
 
 message Seat {
@@ -30,6 +30,6 @@ message ListSeatsRequest {
   string session_id = 2;
 }
 
-message GetSeatsResponse {
+message ListSeatsResponse {
   repeated Seat seats = 1;
 }
