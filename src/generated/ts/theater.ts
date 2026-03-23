@@ -37,7 +37,7 @@ export interface CreateTheaterRequest {
 }
 
 export interface CreateTheaterResponse {
-  ok: boolean;
+  theater?: Theater | undefined;
 }
 
 export const THEATER_V1_PACKAGE_NAME = "theater.v1";
@@ -261,13 +261,13 @@ export const CreateTheaterRequest: MessageFns<CreateTheaterRequest> = {
 };
 
 function createBaseCreateTheaterResponse(): CreateTheaterResponse {
-  return { ok: false };
+  return {};
 }
 
 export const CreateTheaterResponse: MessageFns<CreateTheaterResponse> = {
   encode(message: CreateTheaterResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.ok !== false) {
-      writer.uint32(8).bool(message.ok);
+    if (message.theater !== undefined) {
+      Theater.encode(message.theater, writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -280,11 +280,11 @@ export const CreateTheaterResponse: MessageFns<CreateTheaterResponse> = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1: {
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.ok = reader.bool();
+          message.theater = Theater.decode(reader, reader.uint32());
           continue;
         }
       }

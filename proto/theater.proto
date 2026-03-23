@@ -35,5 +35,5 @@ message CreateTheaterRequest {
 }
 
 message CreateTheaterResponse {
-  bool ok = 1;
+  Theater theater = 1;
 }
