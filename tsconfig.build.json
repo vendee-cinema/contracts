@@ -4,7 +4,7 @@
     "declaration": true,
     "outDir": "./dist",
     "emitDeclarationOnly": false,
-    "rootDirs": ["src", "gen/ts"], // Вказуємо кілька "кореневих" директорій
+    "rootDirs": ["src", "gen/ts"],
     "module": "commonjs",
     "target": "es2024"
   },

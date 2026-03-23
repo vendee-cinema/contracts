@@ -1,1 +1,1 @@
-export * as media from '../gen/ts/media';
+export * from '../gen/ts/media';

@@ -1,1 +1,1 @@
-export * as category from '../gen/ts/category';
+export * from '../gen/ts/category';
