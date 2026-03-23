@@ -2,8 +2,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "emitDeclarationOnly": false,
+    "rootDirs": ["src", "gen/ts"], // Вказуємо кілька "кореневих" директорій
+    "module": "commonjs",
+    "target": "es2024"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "gen/ts/**/*"],
   "exclude": ["node_modules", "dist", "test"]
 }

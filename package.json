@@ -4,9 +4,20 @@
   "description": "Protobuf definitions and generated TypeScript types",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./account": "./dist/account.js",
+    "./auth": "./dist/auth.js",
+    "./category": "./dist/category.js",
+    "./media": "./dist/media.js",
+    "./movie": "./dist/movie.js",
+    "./theater": "./dist/theater.js",
+    "./user": "./dist/user.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "generate": "protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen/ts --ts_proto_opt=nestJs=true,package=omit,stringEnums=true,unrecognizedEnum=false,outputServices=grpc-js,useOptionals=messages,esModuleInterop=true"
+    "generate": "protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen/ts --ts_proto_opt=nestJs=true,package=omit,stringEnums=true,unrecognizedEnum=false,outputServices=grpc-js,useOptionals=messages,esModuleInterop=true",
+    "prepare": "npm run generate && npm run build"
   },
   "files": [
     "dist",
@@ -22,6 +33,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.3",
     "@nestjs/microservices": "^11.1.16",
     "rxjs": "^7.8.2",
     "ts-proto": "^2.11.4"

@@ -26,11 +26,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build
-
       - name: Generate TS Protobuf
         run: npm run generate
+
+      - name: Build
+        run: npm run build
 
       - name: Publish package
         run: npm publish --access public
