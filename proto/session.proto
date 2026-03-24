@@ -10,13 +10,13 @@ service SessionService {
 }
 
 message Session {
-  string            id         = 1;
-  string            start_at   = 2;
-  string            end_at     = 3;
-  Theater           theater    = 4;
-  Hall              hall       = 5;
-  Movie             movie      = 6;
-  repeated SeatType seat_types = 7;
+  string        id       = 1;
+  string        start_at = 2;
+  string        end_at   = 3;
+  Theater       theater  = 4;
+  Hall          hall     = 5;
+  Movie         movie    = 6;
+  repeated Seat seats    = 7;
 }
 
 message Theater {
@@ -30,7 +30,7 @@ message Hall {
   string name = 2;
 }
 
-message SeatType {
+message Seat {
   string type  = 1;
   int32  price = 2;
 }
