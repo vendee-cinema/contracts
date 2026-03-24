@@ -1,13 +1,14 @@
 import { join } from 'path';
 
 export const PROTO_PATHS = {
-  AUTH: join(__dirname, '../../proto/auth.proto'),
   ACCOUNT: join(__dirname, '../../proto/account.proto'),
-  USER: join(__dirname, '../../proto/user.proto'),
+  AUTH: join(__dirname, '../../proto/auth.proto'),
+  CATEGORY: join(__dirname, '../../proto/category.proto'),
+  HALL: join(__dirname, '../../proto/hall.proto'),
   MEDIA: join(__dirname, '../../proto/media.proto'),
   MOVIE: join(__dirname, '../../proto/movie.proto'),
-  CATEGORY: join(__dirname, '../../proto/category.proto'),
-  THEATER: join(__dirname, '../../proto/theater.proto'),
-  HALL: join(__dirname, '../../proto/hall.proto'),
   SEAT: join(__dirname, '../../proto/seat.proto'),
+  SESSION: join(__dirname, '../../proto/session.proto'),
+  THEATER: join(__dirname, '../../proto/theater.proto'),
+  USER: join(__dirname, '../../proto/user.proto'),
 } as const;

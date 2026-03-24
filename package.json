@@ -14,6 +14,7 @@
     "./media": "./dist/media.js",
     "./movie": "./dist/movie.js",
     "./seat": "./dist/seat.js",
+    "./session": "./dist/session.js",
     "./theater": "./dist/theater.js",
     "./timestamp": "./dist/timestamp.js",
     "./user": "./dist/user.js"

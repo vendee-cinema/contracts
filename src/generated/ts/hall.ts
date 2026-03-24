@@ -16,7 +16,6 @@ export interface Hall {
   id: string;
   name: string;
   theaterId: string;
-  rows: Row[];
 }
 
 export interface Row {
@@ -55,7 +54,7 @@ export interface ListHallsResponse {
 export const HALL_V1_PACKAGE_NAME = "hall.v1";
 
 function createBaseHall(): Hall {
-  return { id: "", name: "", theaterId: "", rows: [] };
+  return { id: "", name: "", theaterId: "" };
 }
 
 export const Hall: MessageFns<Hall> = {
@@ -68,9 +67,6 @@ export const Hall: MessageFns<Hall> = {
     }
     if (message.theaterId !== "") {
       writer.uint32(26).string(message.theaterId);
-    }
-    for (const v of message.rows) {
-      Row.encode(v!, writer.uint32(34).fork()).join();
     }
     return writer;
   },
@@ -104,14 +100,6 @@ export const Hall: MessageFns<Hall> = {
           }
 
           message.theaterId = reader.string();
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.rows.push(Row.decode(reader, reader.uint32()));
           continue;
         }
       }

@@ -35,7 +35,7 @@ export interface ListSeatsRequest {
   sessionId: string;
 }
 
-export interface GetSeatsResponse {
+export interface ListSeatsResponse {
   seats: Seat[];
 }
 
@@ -266,22 +266,22 @@ export const ListSeatsRequest: MessageFns<ListSeatsRequest> = {
   },
 };
 
-function createBaseGetSeatsResponse(): GetSeatsResponse {
+function createBaseListSeatsResponse(): ListSeatsResponse {
   return { seats: [] };
 }
 
-export const GetSeatsResponse: MessageFns<GetSeatsResponse> = {
-  encode(message: GetSeatsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const ListSeatsResponse: MessageFns<ListSeatsResponse> = {
+  encode(message: ListSeatsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.seats) {
       Seat.encode(v!, writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetSeatsResponse {
+  decode(input: BinaryReader | Uint8Array, length?: number): ListSeatsResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetSeatsResponse();
+    const message = createBaseListSeatsResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -306,7 +306,7 @@ export const GetSeatsResponse: MessageFns<GetSeatsResponse> = {
 export interface SeatServiceClient {
   getSeat(request: GetSeatRequest): Observable<GetSeatResponse>;
 
-  listSeatsByHall(request: ListSeatsRequest): Observable<GetSeatsResponse>;
+  listSeatsByHall(request: ListSeatsRequest): Observable<ListSeatsResponse>;
 }
 
 export interface SeatServiceController {
@@ -314,7 +314,7 @@ export interface SeatServiceController {
 
   listSeatsByHall(
     request: ListSeatsRequest,
-  ): Promise<GetSeatsResponse> | Observable<GetSeatsResponse> | GetSeatsResponse;
+  ): Promise<ListSeatsResponse> | Observable<ListSeatsResponse> | ListSeatsResponse;
 }
 
 export function SeatServiceControllerMethods() {
@@ -351,14 +351,14 @@ export const SeatServiceService = {
     responseStream: false,
     requestSerialize: (value: ListSeatsRequest): Buffer => Buffer.from(ListSeatsRequest.encode(value).finish()),
     requestDeserialize: (value: Buffer): ListSeatsRequest => ListSeatsRequest.decode(value),
-    responseSerialize: (value: GetSeatsResponse): Buffer => Buffer.from(GetSeatsResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): GetSeatsResponse => GetSeatsResponse.decode(value),
+    responseSerialize: (value: ListSeatsResponse): Buffer => Buffer.from(ListSeatsResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ListSeatsResponse => ListSeatsResponse.decode(value),
   },
 } as const;
 
 export interface SeatServiceServer extends UntypedServiceImplementation {
   getSeat: handleUnaryCall<GetSeatRequest, GetSeatResponse>;
-  listSeatsByHall: handleUnaryCall<ListSeatsRequest, GetSeatsResponse>;
+  listSeatsByHall: handleUnaryCall<ListSeatsRequest, ListSeatsResponse>;
 }
 
 export interface MessageFns<T> {

@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package session.v1;
+
+service SessionService {
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+  rpc GetSessions (GetSessionsRequest) returns (GetSessionsResponse);
+  rpc GetSessionsByMovie (GetSessionsByMovieRequest) returns (GetSessionsByMovieResponse);
+  rpc GetSession (GetSessionRequest) returns (GetSessionResponse);
+}
+
+message Session {
+  string            id         = 1;
+  string            start_at   = 2;
+  string            end_at     = 3;
+  Theater           theater    = 4;
+  Hall              hall       = 5;
+  Movie             movie      = 6;
+  repeated SeatType seat_types = 7;
+}
+
+message Theater {
+  string id      = 1;
+  string name    = 2;
+  string address = 3;
+}
+
+message Hall {
+  string id   = 1;
+  string name = 2;
+}
+
+message SeatType {
+  string type  = 1;
+  int32  price = 2;
+}
+
+message Movie {
+  string id       = 1;
+  string title    = 2;
+  string slug     = 3;
+  int32  duration = 4;
+  string banner   = 5;
+}
+
+message CreateSessionRequest {
+  string movie_id = 1;
+  string hall_id  = 2;
+  string start_at = 3;
+  string end_at   = 4;
+}
+
+message CreateSessionResponse {
+  bool ok = 1;
+}
+
+message GetSessionsRequest {
+  optional string theater_id = 1;
+  optional string date       = 2;
+}
+
+message GetSessionsResponse {
+  repeated Session sessions = 1;
+}
+
+message GetSessionsByMovieRequest {
+  string          movie_id = 1;
+  optional string date     = 2;
+}
+
+message GetSessionsByMovieResponse {
+  repeated Session sessions = 1;
+}
+
+message GetSessionRequest {
+  string id = 1;
+}
+
+message GetSessionResponse {
+  Session session = 1;
+}
