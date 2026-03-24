@@ -19,7 +19,7 @@ export interface Session {
   theater?: Theater | undefined;
   hall?: Hall | undefined;
   movie?: Movie | undefined;
-  seatTypes: SeatType[];
+  seats: Seat[];
 }
 
 export interface Theater {
@@ -33,7 +33,7 @@ export interface Hall {
   name: string;
 }
 
-export interface SeatType {
+export interface Seat {
   type: string;
   price: number;
 }
@@ -57,21 +57,21 @@ export interface CreateSessionResponse {
   ok: boolean;
 }
 
-export interface GetSessionsRequest {
+export interface ListSessionsRequest {
   theaterId?: string | undefined;
   date?: string | undefined;
 }
 
-export interface GetSessionsResponse {
+export interface ListSessionsResponse {
   sessions: Session[];
 }
 
-export interface GetSessionsByMovieRequest {
+export interface ListSessionsByMovieRequest {
   movieId: string;
   date?: string | undefined;
 }
 
-export interface GetSessionsByMovieResponse {
+export interface ListSessionsByMovieResponse {
   sessions: Session[];
 }
 
@@ -86,7 +86,7 @@ export interface GetSessionResponse {
 export const SESSION_V1_PACKAGE_NAME = "session.v1";
 
 function createBaseSession(): Session {
-  return { id: "", startAt: "", endAt: "", seatTypes: [] };
+  return { id: "", startAt: "", endAt: "", seats: [] };
 }
 
 export const Session: MessageFns<Session> = {
@@ -109,8 +109,8 @@ export const Session: MessageFns<Session> = {
     if (message.movie !== undefined) {
       Movie.encode(message.movie, writer.uint32(50).fork()).join();
     }
-    for (const v of message.seatTypes) {
-      SeatType.encode(v!, writer.uint32(58).fork()).join();
+    for (const v of message.seats) {
+      Seat.encode(v!, writer.uint32(58).fork()).join();
     }
     return writer;
   },
@@ -175,7 +175,7 @@ export const Session: MessageFns<Session> = {
             break;
           }
 
-          message.seatTypes.push(SeatType.decode(reader, reader.uint32()));
+          message.seats.push(Seat.decode(reader, reader.uint32()));
           continue;
         }
       }
@@ -295,12 +295,12 @@ export const Hall: MessageFns<Hall> = {
   },
 };
 
-function createBaseSeatType(): SeatType {
+function createBaseSeat(): Seat {
   return { type: "", price: 0 };
 }
 
-export const SeatType: MessageFns<SeatType> = {
-  encode(message: SeatType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const Seat: MessageFns<Seat> = {
+  encode(message: Seat, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.type !== "") {
       writer.uint32(10).string(message.type);
     }
@@ -310,10 +310,10 @@ export const SeatType: MessageFns<SeatType> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): SeatType {
+  decode(input: BinaryReader | Uint8Array, length?: number): Seat {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSeatType();
+    const message = createBaseSeat();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -531,12 +531,12 @@ export const CreateSessionResponse: MessageFns<CreateSessionResponse> = {
   },
 };
 
-function createBaseGetSessionsRequest(): GetSessionsRequest {
+function createBaseListSessionsRequest(): ListSessionsRequest {
   return {};
 }
 
-export const GetSessionsRequest: MessageFns<GetSessionsRequest> = {
-  encode(message: GetSessionsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const ListSessionsRequest: MessageFns<ListSessionsRequest> = {
+  encode(message: ListSessionsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.theaterId !== undefined) {
       writer.uint32(10).string(message.theaterId);
     }
@@ -546,10 +546,10 @@ export const GetSessionsRequest: MessageFns<GetSessionsRequest> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetSessionsRequest {
+  decode(input: BinaryReader | Uint8Array, length?: number): ListSessionsRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetSessionsRequest();
+    const message = createBaseListSessionsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -579,22 +579,22 @@ export const GetSessionsRequest: MessageFns<GetSessionsRequest> = {
   },
 };
 
-function createBaseGetSessionsResponse(): GetSessionsResponse {
+function createBaseListSessionsResponse(): ListSessionsResponse {
   return { sessions: [] };
 }
 
-export const GetSessionsResponse: MessageFns<GetSessionsResponse> = {
-  encode(message: GetSessionsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const ListSessionsResponse: MessageFns<ListSessionsResponse> = {
+  encode(message: ListSessionsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.sessions) {
       Session.encode(v!, writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetSessionsResponse {
+  decode(input: BinaryReader | Uint8Array, length?: number): ListSessionsResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetSessionsResponse();
+    const message = createBaseListSessionsResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -616,12 +616,12 @@ export const GetSessionsResponse: MessageFns<GetSessionsResponse> = {
   },
 };
 
-function createBaseGetSessionsByMovieRequest(): GetSessionsByMovieRequest {
+function createBaseListSessionsByMovieRequest(): ListSessionsByMovieRequest {
   return { movieId: "" };
 }
 
-export const GetSessionsByMovieRequest: MessageFns<GetSessionsByMovieRequest> = {
-  encode(message: GetSessionsByMovieRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const ListSessionsByMovieRequest: MessageFns<ListSessionsByMovieRequest> = {
+  encode(message: ListSessionsByMovieRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.movieId !== "") {
       writer.uint32(10).string(message.movieId);
     }
@@ -631,10 +631,10 @@ export const GetSessionsByMovieRequest: MessageFns<GetSessionsByMovieRequest> = 
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetSessionsByMovieRequest {
+  decode(input: BinaryReader | Uint8Array, length?: number): ListSessionsByMovieRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetSessionsByMovieRequest();
+    const message = createBaseListSessionsByMovieRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -664,22 +664,22 @@ export const GetSessionsByMovieRequest: MessageFns<GetSessionsByMovieRequest> = 
   },
 };
 
-function createBaseGetSessionsByMovieResponse(): GetSessionsByMovieResponse {
+function createBaseListSessionsByMovieResponse(): ListSessionsByMovieResponse {
   return { sessions: [] };
 }
 
-export const GetSessionsByMovieResponse: MessageFns<GetSessionsByMovieResponse> = {
-  encode(message: GetSessionsByMovieResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const ListSessionsByMovieResponse: MessageFns<ListSessionsByMovieResponse> = {
+  encode(message: ListSessionsByMovieResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.sessions) {
       Session.encode(v!, writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetSessionsByMovieResponse {
+  decode(input: BinaryReader | Uint8Array, length?: number): ListSessionsByMovieResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetSessionsByMovieResponse();
+    const message = createBaseListSessionsByMovieResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -778,9 +778,9 @@ export const GetSessionResponse: MessageFns<GetSessionResponse> = {
 export interface SessionServiceClient {
   createSession(request: CreateSessionRequest): Observable<CreateSessionResponse>;
 
-  getSessions(request: GetSessionsRequest): Observable<GetSessionsResponse>;
+  listSessions(request: ListSessionsRequest): Observable<ListSessionsResponse>;
 
-  getSessionsByMovie(request: GetSessionsByMovieRequest): Observable<GetSessionsByMovieResponse>;
+  listSessionsByMovie(request: ListSessionsByMovieRequest): Observable<ListSessionsByMovieResponse>;
 
   getSession(request: GetSessionRequest): Observable<GetSessionResponse>;
 }
@@ -790,13 +790,13 @@ export interface SessionServiceController {
     request: CreateSessionRequest,
   ): Promise<CreateSessionResponse> | Observable<CreateSessionResponse> | CreateSessionResponse;
 
-  getSessions(
-    request: GetSessionsRequest,
-  ): Promise<GetSessionsResponse> | Observable<GetSessionsResponse> | GetSessionsResponse;
+  listSessions(
+    request: ListSessionsRequest,
+  ): Promise<ListSessionsResponse> | Observable<ListSessionsResponse> | ListSessionsResponse;
 
-  getSessionsByMovie(
-    request: GetSessionsByMovieRequest,
-  ): Promise<GetSessionsByMovieResponse> | Observable<GetSessionsByMovieResponse> | GetSessionsByMovieResponse;
+  listSessionsByMovie(
+    request: ListSessionsByMovieRequest,
+  ): Promise<ListSessionsByMovieResponse> | Observable<ListSessionsByMovieResponse> | ListSessionsByMovieResponse;
 
   getSession(
     request: GetSessionRequest,
@@ -805,7 +805,7 @@ export interface SessionServiceController {
 
 export function SessionServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createSession", "getSessions", "getSessionsByMovie", "getSession"];
+    const grpcMethods: string[] = ["createSession", "listSessions", "listSessionsByMovie", "getSession"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("SessionService", method)(constructor.prototype[method], method, descriptor);
@@ -832,25 +832,26 @@ export const SessionServiceService = {
       Buffer.from(CreateSessionResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): CreateSessionResponse => CreateSessionResponse.decode(value),
   },
-  getSessions: {
-    path: "/session.v1.SessionService/GetSessions",
+  listSessions: {
+    path: "/session.v1.SessionService/ListSessions",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: GetSessionsRequest): Buffer => Buffer.from(GetSessionsRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): GetSessionsRequest => GetSessionsRequest.decode(value),
-    responseSerialize: (value: GetSessionsResponse): Buffer => Buffer.from(GetSessionsResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): GetSessionsResponse => GetSessionsResponse.decode(value),
+    requestSerialize: (value: ListSessionsRequest): Buffer => Buffer.from(ListSessionsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ListSessionsRequest => ListSessionsRequest.decode(value),
+    responseSerialize: (value: ListSessionsResponse): Buffer =>
+      Buffer.from(ListSessionsResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ListSessionsResponse => ListSessionsResponse.decode(value),
   },
-  getSessionsByMovie: {
-    path: "/session.v1.SessionService/GetSessionsByMovie",
+  listSessionsByMovie: {
+    path: "/session.v1.SessionService/ListSessionsByMovie",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: GetSessionsByMovieRequest): Buffer =>
-      Buffer.from(GetSessionsByMovieRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): GetSessionsByMovieRequest => GetSessionsByMovieRequest.decode(value),
-    responseSerialize: (value: GetSessionsByMovieResponse): Buffer =>
-      Buffer.from(GetSessionsByMovieResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): GetSessionsByMovieResponse => GetSessionsByMovieResponse.decode(value),
+    requestSerialize: (value: ListSessionsByMovieRequest): Buffer =>
+      Buffer.from(ListSessionsByMovieRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ListSessionsByMovieRequest => ListSessionsByMovieRequest.decode(value),
+    responseSerialize: (value: ListSessionsByMovieResponse): Buffer =>
+      Buffer.from(ListSessionsByMovieResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ListSessionsByMovieResponse => ListSessionsByMovieResponse.decode(value),
   },
   getSession: {
     path: "/session.v1.SessionService/GetSession",
@@ -865,8 +866,8 @@ export const SessionServiceService = {
 
 export interface SessionServiceServer extends UntypedServiceImplementation {
   createSession: handleUnaryCall<CreateSessionRequest, CreateSessionResponse>;
-  getSessions: handleUnaryCall<GetSessionsRequest, GetSessionsResponse>;
-  getSessionsByMovie: handleUnaryCall<GetSessionsByMovieRequest, GetSessionsByMovieResponse>;
+  listSessions: handleUnaryCall<ListSessionsRequest, ListSessionsResponse>;
+  listSessionsByMovie: handleUnaryCall<ListSessionsByMovieRequest, ListSessionsByMovieResponse>;
   getSession: handleUnaryCall<GetSessionRequest, GetSessionResponse>;
 }
 

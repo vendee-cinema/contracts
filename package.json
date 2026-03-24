@@ -1,7 +1,7 @@
 {
   "name": "@vendee-cinema/contracts",
   "version": "1.2.21",
-  "description": "Protobuf definitions and generated TypeScript types",
+  "description": "Protobuf definitions and generated TypeScript and Go types",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -13,6 +13,7 @@
     "./empty": "./dist/empty.js",
     "./media": "./dist/media.js",
     "./movie": "./dist/movie.js",
+    "./payment": "./dist/payment.js",
     "./seat": "./dist/seat.js",
     "./session": "./dist/session.js",
     "./theater": "./dist/theater.js",
