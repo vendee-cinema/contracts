@@ -4,8 +4,8 @@ package session.v1;
 
 service SessionService {
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
-  rpc GetSessions (GetSessionsRequest) returns (GetSessionsResponse);
-  rpc GetSessionsByMovie (GetSessionsByMovieRequest) returns (GetSessionsByMovieResponse);
+  rpc ListSessions (ListSessionsRequest) returns (ListSessionsResponse);
+  rpc ListSessionsByMovie (ListSessionsByMovieRequest) returns (ListSessionsByMovieResponse);
   rpc GetSession (GetSessionRequest) returns (GetSessionResponse);
 }
 
@@ -54,21 +54,21 @@ message CreateSessionResponse {
   bool ok = 1;
 }
 
-message GetSessionsRequest {
+message ListSessionsRequest {
   optional string theater_id = 1;
   optional string date       = 2;
 }
 
-message GetSessionsResponse {
+message ListSessionsResponse {
   repeated Session sessions = 1;
 }
 
-message GetSessionsByMovieRequest {
+message ListSessionsByMovieRequest {
   string          movie_id = 1;
   optional string date     = 2;
 }
 
-message GetSessionsByMovieResponse {
+message ListSessionsByMovieResponse {
   repeated Session sessions = 1;
 }
 
