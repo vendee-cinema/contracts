@@ -31,7 +31,7 @@ export interface CreatePaymentResponse {
 
 export interface ProcessPaymentEventRequest {
   provider: string;
-  payload: string;
+  data: string;
   signature: string;
 }
 
@@ -208,7 +208,7 @@ export const CreatePaymentResponse: MessageFns<CreatePaymentResponse> = {
 };
 
 function createBaseProcessPaymentEventRequest(): ProcessPaymentEventRequest {
-  return { provider: "", payload: "", signature: "" };
+  return { provider: "", data: "", signature: "" };
 }
 
 export const ProcessPaymentEventRequest: MessageFns<ProcessPaymentEventRequest> = {
@@ -216,8 +216,8 @@ export const ProcessPaymentEventRequest: MessageFns<ProcessPaymentEventRequest> 
     if (message.provider !== "") {
       writer.uint32(10).string(message.provider);
     }
-    if (message.payload !== "") {
-      writer.uint32(18).string(message.payload);
+    if (message.data !== "") {
+      writer.uint32(18).string(message.data);
     }
     if (message.signature !== "") {
       writer.uint32(26).string(message.signature);
@@ -245,7 +245,7 @@ export const ProcessPaymentEventRequest: MessageFns<ProcessPaymentEventRequest> 
             break;
           }
 
-          message.payload = reader.string();
+          message.data = reader.string();
           continue;
         }
         case 3: {
