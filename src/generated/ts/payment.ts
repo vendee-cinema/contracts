@@ -30,14 +30,9 @@ export interface CreatePaymentResponse {
 }
 
 export interface ProcessPaymentEventRequest {
-  event: string;
-  paymentId: string;
-  bookingId: string;
-  userId: string;
-  savePaymentMethod: boolean;
-  providerPaymentId: string;
-  cardFirst6: string;
-  cardLast4: string;
+  provider: string;
+  payload: string;
+  signature: string;
 }
 
 export interface ProcessPaymentEventResponse {
@@ -213,43 +208,19 @@ export const CreatePaymentResponse: MessageFns<CreatePaymentResponse> = {
 };
 
 function createBaseProcessPaymentEventRequest(): ProcessPaymentEventRequest {
-  return {
-    event: "",
-    paymentId: "",
-    bookingId: "",
-    userId: "",
-    savePaymentMethod: false,
-    providerPaymentId: "",
-    cardFirst6: "",
-    cardLast4: "",
-  };
+  return { provider: "", payload: "", signature: "" };
 }
 
 export const ProcessPaymentEventRequest: MessageFns<ProcessPaymentEventRequest> = {
   encode(message: ProcessPaymentEventRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.event !== "") {
-      writer.uint32(10).string(message.event);
+    if (message.provider !== "") {
+      writer.uint32(10).string(message.provider);
     }
-    if (message.paymentId !== "") {
-      writer.uint32(18).string(message.paymentId);
+    if (message.payload !== "") {
+      writer.uint32(18).string(message.payload);
     }
-    if (message.bookingId !== "") {
-      writer.uint32(26).string(message.bookingId);
-    }
-    if (message.userId !== "") {
-      writer.uint32(34).string(message.userId);
-    }
-    if (message.savePaymentMethod !== false) {
-      writer.uint32(40).bool(message.savePaymentMethod);
-    }
-    if (message.providerPaymentId !== "") {
-      writer.uint32(50).string(message.providerPaymentId);
-    }
-    if (message.cardFirst6 !== "") {
-      writer.uint32(58).string(message.cardFirst6);
-    }
-    if (message.cardLast4 !== "") {
-      writer.uint32(66).string(message.cardLast4);
+    if (message.signature !== "") {
+      writer.uint32(26).string(message.signature);
     }
     return writer;
   },
@@ -266,7 +237,7 @@ export const ProcessPaymentEventRequest: MessageFns<ProcessPaymentEventRequest> 
             break;
           }
 
-          message.event = reader.string();
+          message.provider = reader.string();
           continue;
         }
         case 2: {
@@ -274,7 +245,7 @@ export const ProcessPaymentEventRequest: MessageFns<ProcessPaymentEventRequest> 
             break;
           }
 
-          message.paymentId = reader.string();
+          message.payload = reader.string();
           continue;
         }
         case 3: {
@@ -282,47 +253,7 @@ export const ProcessPaymentEventRequest: MessageFns<ProcessPaymentEventRequest> 
             break;
           }
 
-          message.bookingId = reader.string();
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.userId = reader.string();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.savePaymentMethod = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 50) {
-            break;
-          }
-
-          message.providerPaymentId = reader.string();
-          continue;
-        }
-        case 7: {
-          if (tag !== 58) {
-            break;
-          }
-
-          message.cardFirst6 = reader.string();
-          continue;
-        }
-        case 8: {
-          if (tag !== 66) {
-            break;
-          }
-
-          message.cardLast4 = reader.string();
+          message.signature = reader.string();
           continue;
         }
       }
