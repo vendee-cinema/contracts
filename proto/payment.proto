@@ -25,14 +25,9 @@ message CreatePaymentResponse {
 }
 
 message ProcessPaymentEventRequest {
-  string event               = 1;
-  string payment_id          = 2;
-  string booking_id          = 3;
-  string user_id             = 4;
-  bool   save_payment_method = 5;
-  string provider_payment_id = 6;
-  string card_first6         = 7;
-  string card_last4          = 8;
+  string provider  = 1;
+  string payload   = 2;
+  string signature = 3;
 }
 
 message ProcessPaymentEventResponse {
