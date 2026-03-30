@@ -39,6 +39,14 @@ export interface ProcessPaymentEventResponse {
   ok: boolean;
 }
 
+export interface GetPaymentStatusRequest {
+  orderId: string;
+}
+
+export interface GetPaymentStatusResponse {
+  status: string;
+}
+
 export const PAYMENT_V1_PACKAGE_NAME = "payment.v1";
 
 function createBaseSeatInput(): SeatInput {
@@ -303,10 +311,86 @@ export const ProcessPaymentEventResponse: MessageFns<ProcessPaymentEventResponse
   },
 };
 
+function createBaseGetPaymentStatusRequest(): GetPaymentStatusRequest {
+  return { orderId: "" };
+}
+
+export const GetPaymentStatusRequest: MessageFns<GetPaymentStatusRequest> = {
+  encode(message: GetPaymentStatusRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.orderId !== "") {
+      writer.uint32(10).string(message.orderId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPaymentStatusRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPaymentStatusRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orderId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseGetPaymentStatusResponse(): GetPaymentStatusResponse {
+  return { status: "" };
+}
+
+export const GetPaymentStatusResponse: MessageFns<GetPaymentStatusResponse> = {
+  encode(message: GetPaymentStatusResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.status !== "") {
+      writer.uint32(10).string(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPaymentStatusResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPaymentStatusResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
 export interface PaymentServiceClient {
   createPayment(request: CreatePaymentRequest): Observable<CreatePaymentResponse>;
 
   processPaymentEvent(request: ProcessPaymentEventRequest): Observable<ProcessPaymentEventResponse>;
+
+  getPaymentStatus(request: GetPaymentStatusRequest): Observable<GetPaymentStatusResponse>;
 }
 
 export interface PaymentServiceController {
@@ -317,11 +401,15 @@ export interface PaymentServiceController {
   processPaymentEvent(
     request: ProcessPaymentEventRequest,
   ): Promise<ProcessPaymentEventResponse> | Observable<ProcessPaymentEventResponse> | ProcessPaymentEventResponse;
+
+  getPaymentStatus(
+    request: GetPaymentStatusRequest,
+  ): Promise<GetPaymentStatusResponse> | Observable<GetPaymentStatusResponse> | GetPaymentStatusResponse;
 }
 
 export function PaymentServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createPayment", "processPaymentEvent"];
+    const grpcMethods: string[] = ["createPayment", "processPaymentEvent", "getPaymentStatus"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("PaymentService", method)(constructor.prototype[method], method, descriptor);
@@ -359,11 +447,23 @@ export const PaymentServiceService = {
       Buffer.from(ProcessPaymentEventResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): ProcessPaymentEventResponse => ProcessPaymentEventResponse.decode(value),
   },
+  getPaymentStatus: {
+    path: "/payment.v1.PaymentService/GetPaymentStatus",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetPaymentStatusRequest): Buffer =>
+      Buffer.from(GetPaymentStatusRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPaymentStatusRequest => GetPaymentStatusRequest.decode(value),
+    responseSerialize: (value: GetPaymentStatusResponse): Buffer =>
+      Buffer.from(GetPaymentStatusResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPaymentStatusResponse => GetPaymentStatusResponse.decode(value),
+  },
 } as const;
 
 export interface PaymentServiceServer extends UntypedServiceImplementation {
   createPayment: handleUnaryCall<CreatePaymentRequest, CreatePaymentResponse>;
   processPaymentEvent: handleUnaryCall<ProcessPaymentEventRequest, ProcessPaymentEventResponse>;
+  getPaymentStatus: handleUnaryCall<GetPaymentStatusRequest, GetPaymentStatusResponse>;
 }
 
 export interface MessageFns<T> {
