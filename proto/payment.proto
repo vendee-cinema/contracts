@@ -5,6 +5,7 @@ package payment.v1;
 service PaymentService {
   rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse);
   rpc ProcessPaymentEvent (ProcessPaymentEventRequest) returns (ProcessPaymentEventResponse);
+  rpc GetPaymentStatus (GetPaymentStatusRequest) returns (GetPaymentStatusResponse);
 }
 
 message SeatInput {
@@ -26,10 +27,18 @@ message CreatePaymentResponse {
 
 message ProcessPaymentEventRequest {
   string provider  = 1;
-  string data   = 2;
+  string data      = 2;
   string signature = 3;
 }
 
 message ProcessPaymentEventResponse {
   bool ok = 1;
+}
+
+message GetPaymentStatusRequest {
+  string order_id = 1;
+}
+
+message GetPaymentStatusResponse {
+  string status = 1;
 }
