@@ -17,6 +17,13 @@ export interface SeatInput {
   price: number;
 }
 
+export interface PaymentMethodItem {
+  id: string;
+  bank: string;
+  brand: string;
+  mask: string;
+}
+
 export interface CreatePaymentRequest {
   userId: string;
   sessionId: string;
@@ -45,6 +52,41 @@ export interface GetPaymentStatusRequest {
 
 export interface GetPaymentStatusResponse {
   status: string;
+}
+
+export interface GetUserPaymentMethodsRequest {
+  userId: string;
+}
+
+export interface GetUserPaymentMethodsResponse {
+  methods: PaymentMethodItem[];
+}
+
+export interface CreatePaymentMethodRequest {
+  userId: string;
+}
+
+export interface CreatePaymentMethodResponse {
+  id: string;
+  url: string;
+}
+
+export interface VerifyPaymentMethodRequest {
+  userId: string;
+  methodId: string;
+}
+
+export interface VerifyPaymentMethodResponse {
+  ok: boolean;
+}
+
+export interface DeletePaymentMethodRequest {
+  userId: string;
+  methodId: string;
+}
+
+export interface DeletePaymentMethodResponse {
+  ok: boolean;
 }
 
 export const PAYMENT_V1_PACKAGE_NAME = "payment.v1";
@@ -85,6 +127,76 @@ export const SeatInput: MessageFns<SeatInput> = {
           }
 
           message.price = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBasePaymentMethodItem(): PaymentMethodItem {
+  return { id: "", bank: "", brand: "", mask: "" };
+}
+
+export const PaymentMethodItem: MessageFns<PaymentMethodItem> = {
+  encode(message: PaymentMethodItem, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.bank !== "") {
+      writer.uint32(18).string(message.bank);
+    }
+    if (message.brand !== "") {
+      writer.uint32(26).string(message.brand);
+    }
+    if (message.mask !== "") {
+      writer.uint32(34).string(message.mask);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PaymentMethodItem {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePaymentMethodItem();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.bank = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.brand = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.mask = reader.string();
           continue;
         }
       }
@@ -385,12 +497,349 @@ export const GetPaymentStatusResponse: MessageFns<GetPaymentStatusResponse> = {
   },
 };
 
+function createBaseGetUserPaymentMethodsRequest(): GetUserPaymentMethodsRequest {
+  return { userId: "" };
+}
+
+export const GetUserPaymentMethodsRequest: MessageFns<GetUserPaymentMethodsRequest> = {
+  encode(message: GetUserPaymentMethodsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetUserPaymentMethodsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetUserPaymentMethodsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseGetUserPaymentMethodsResponse(): GetUserPaymentMethodsResponse {
+  return { methods: [] };
+}
+
+export const GetUserPaymentMethodsResponse: MessageFns<GetUserPaymentMethodsResponse> = {
+  encode(message: GetUserPaymentMethodsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.methods) {
+      PaymentMethodItem.encode(v!, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetUserPaymentMethodsResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetUserPaymentMethodsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.methods.push(PaymentMethodItem.decode(reader, reader.uint32()));
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseCreatePaymentMethodRequest(): CreatePaymentMethodRequest {
+  return { userId: "" };
+}
+
+export const CreatePaymentMethodRequest: MessageFns<CreatePaymentMethodRequest> = {
+  encode(message: CreatePaymentMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CreatePaymentMethodRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePaymentMethodRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseCreatePaymentMethodResponse(): CreatePaymentMethodResponse {
+  return { id: "", url: "" };
+}
+
+export const CreatePaymentMethodResponse: MessageFns<CreatePaymentMethodResponse> = {
+  encode(message: CreatePaymentMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.url !== "") {
+      writer.uint32(18).string(message.url);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CreatePaymentMethodResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePaymentMethodResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseVerifyPaymentMethodRequest(): VerifyPaymentMethodRequest {
+  return { userId: "", methodId: "" };
+}
+
+export const VerifyPaymentMethodRequest: MessageFns<VerifyPaymentMethodRequest> = {
+  encode(message: VerifyPaymentMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.methodId !== "") {
+      writer.uint32(18).string(message.methodId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VerifyPaymentMethodRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVerifyPaymentMethodRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.methodId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseVerifyPaymentMethodResponse(): VerifyPaymentMethodResponse {
+  return { ok: false };
+}
+
+export const VerifyPaymentMethodResponse: MessageFns<VerifyPaymentMethodResponse> = {
+  encode(message: VerifyPaymentMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.ok !== false) {
+      writer.uint32(8).bool(message.ok);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VerifyPaymentMethodResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVerifyPaymentMethodResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.ok = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseDeletePaymentMethodRequest(): DeletePaymentMethodRequest {
+  return { userId: "", methodId: "" };
+}
+
+export const DeletePaymentMethodRequest: MessageFns<DeletePaymentMethodRequest> = {
+  encode(message: DeletePaymentMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.methodId !== "") {
+      writer.uint32(18).string(message.methodId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DeletePaymentMethodRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeletePaymentMethodRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.methodId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseDeletePaymentMethodResponse(): DeletePaymentMethodResponse {
+  return { ok: false };
+}
+
+export const DeletePaymentMethodResponse: MessageFns<DeletePaymentMethodResponse> = {
+  encode(message: DeletePaymentMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.ok !== false) {
+      writer.uint32(8).bool(message.ok);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DeletePaymentMethodResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeletePaymentMethodResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.ok = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
 export interface PaymentServiceClient {
   createPayment(request: CreatePaymentRequest): Observable<CreatePaymentResponse>;
 
   processPaymentEvent(request: ProcessPaymentEventRequest): Observable<ProcessPaymentEventResponse>;
 
   getPaymentStatus(request: GetPaymentStatusRequest): Observable<GetPaymentStatusResponse>;
+
+  getUserPaymentMethods(request: GetUserPaymentMethodsRequest): Observable<GetUserPaymentMethodsResponse>;
+
+  createPaymentMethod(request: CreatePaymentMethodRequest): Observable<CreatePaymentMethodResponse>;
+
+  verifyPaymentMethod(request: VerifyPaymentMethodRequest): Observable<VerifyPaymentMethodResponse>;
+
+  deletePaymentMethod(request: DeletePaymentMethodRequest): Observable<DeletePaymentMethodResponse>;
 }
 
 export interface PaymentServiceController {
@@ -405,11 +854,35 @@ export interface PaymentServiceController {
   getPaymentStatus(
     request: GetPaymentStatusRequest,
   ): Promise<GetPaymentStatusResponse> | Observable<GetPaymentStatusResponse> | GetPaymentStatusResponse;
+
+  getUserPaymentMethods(
+    request: GetUserPaymentMethodsRequest,
+  ): Promise<GetUserPaymentMethodsResponse> | Observable<GetUserPaymentMethodsResponse> | GetUserPaymentMethodsResponse;
+
+  createPaymentMethod(
+    request: CreatePaymentMethodRequest,
+  ): Promise<CreatePaymentMethodResponse> | Observable<CreatePaymentMethodResponse> | CreatePaymentMethodResponse;
+
+  verifyPaymentMethod(
+    request: VerifyPaymentMethodRequest,
+  ): Promise<VerifyPaymentMethodResponse> | Observable<VerifyPaymentMethodResponse> | VerifyPaymentMethodResponse;
+
+  deletePaymentMethod(
+    request: DeletePaymentMethodRequest,
+  ): Promise<DeletePaymentMethodResponse> | Observable<DeletePaymentMethodResponse> | DeletePaymentMethodResponse;
 }
 
 export function PaymentServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createPayment", "processPaymentEvent", "getPaymentStatus"];
+    const grpcMethods: string[] = [
+      "createPayment",
+      "processPaymentEvent",
+      "getPaymentStatus",
+      "getUserPaymentMethods",
+      "createPaymentMethod",
+      "verifyPaymentMethod",
+      "deletePaymentMethod",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("PaymentService", method)(constructor.prototype[method], method, descriptor);
@@ -458,12 +931,60 @@ export const PaymentServiceService = {
       Buffer.from(GetPaymentStatusResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetPaymentStatusResponse => GetPaymentStatusResponse.decode(value),
   },
+  getUserPaymentMethods: {
+    path: "/payment.v1.PaymentService/GetUserPaymentMethods",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetUserPaymentMethodsRequest): Buffer =>
+      Buffer.from(GetUserPaymentMethodsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetUserPaymentMethodsRequest => GetUserPaymentMethodsRequest.decode(value),
+    responseSerialize: (value: GetUserPaymentMethodsResponse): Buffer =>
+      Buffer.from(GetUserPaymentMethodsResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetUserPaymentMethodsResponse => GetUserPaymentMethodsResponse.decode(value),
+  },
+  createPaymentMethod: {
+    path: "/payment.v1.PaymentService/CreatePaymentMethod",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: CreatePaymentMethodRequest): Buffer =>
+      Buffer.from(CreatePaymentMethodRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CreatePaymentMethodRequest => CreatePaymentMethodRequest.decode(value),
+    responseSerialize: (value: CreatePaymentMethodResponse): Buffer =>
+      Buffer.from(CreatePaymentMethodResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): CreatePaymentMethodResponse => CreatePaymentMethodResponse.decode(value),
+  },
+  verifyPaymentMethod: {
+    path: "/payment.v1.PaymentService/VerifyPaymentMethod",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: VerifyPaymentMethodRequest): Buffer =>
+      Buffer.from(VerifyPaymentMethodRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): VerifyPaymentMethodRequest => VerifyPaymentMethodRequest.decode(value),
+    responseSerialize: (value: VerifyPaymentMethodResponse): Buffer =>
+      Buffer.from(VerifyPaymentMethodResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): VerifyPaymentMethodResponse => VerifyPaymentMethodResponse.decode(value),
+  },
+  deletePaymentMethod: {
+    path: "/payment.v1.PaymentService/DeletePaymentMethod",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: DeletePaymentMethodRequest): Buffer =>
+      Buffer.from(DeletePaymentMethodRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): DeletePaymentMethodRequest => DeletePaymentMethodRequest.decode(value),
+    responseSerialize: (value: DeletePaymentMethodResponse): Buffer =>
+      Buffer.from(DeletePaymentMethodResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): DeletePaymentMethodResponse => DeletePaymentMethodResponse.decode(value),
+  },
 } as const;
 
 export interface PaymentServiceServer extends UntypedServiceImplementation {
   createPayment: handleUnaryCall<CreatePaymentRequest, CreatePaymentResponse>;
   processPaymentEvent: handleUnaryCall<ProcessPaymentEventRequest, ProcessPaymentEventResponse>;
   getPaymentStatus: handleUnaryCall<GetPaymentStatusRequest, GetPaymentStatusResponse>;
+  getUserPaymentMethods: handleUnaryCall<GetUserPaymentMethodsRequest, GetUserPaymentMethodsResponse>;
+  createPaymentMethod: handleUnaryCall<CreatePaymentMethodRequest, CreatePaymentMethodResponse>;
+  verifyPaymentMethod: handleUnaryCall<VerifyPaymentMethodRequest, VerifyPaymentMethodResponse>;
+  deletePaymentMethod: handleUnaryCall<DeletePaymentMethodRequest, DeletePaymentMethodResponse>;
 }
 
 export interface MessageFns<T> {

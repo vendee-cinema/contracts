@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package refund.v1;
+
+service RefundService {
+  rpc CreateRefund (CreateRefundRequest) returns (CreateRefundResponse);
+  rpc ProcessRefundEvent (ProcessRefundEventRequest) returns (ProcessRefundEventResponse);
+}
+
+message CreateRefundRequest {
+  string order_id = 1;
+  string user_id  = 2;
+}
+
+message CreateRefundResponse {
+  bool ok = 1;
+}
+
+message ProcessRefundEventRequest {
+  string result      = 1;
+  bool   wait_amount = 2;
+  string payment_id  = 3;
+  string status      = 4;
+}
+
+message ProcessRefundEventResponse {
+  bool ok = 1;
+}
