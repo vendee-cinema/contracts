@@ -47,7 +47,7 @@ export interface ProcessPaymentEventResponse {
 }
 
 export interface GetPaymentStatusRequest {
-  orderId: string;
+  paymentId: string;
 }
 
 export interface GetPaymentStatusResponse {
@@ -424,13 +424,13 @@ export const ProcessPaymentEventResponse: MessageFns<ProcessPaymentEventResponse
 };
 
 function createBaseGetPaymentStatusRequest(): GetPaymentStatusRequest {
-  return { orderId: "" };
+  return { paymentId: "" };
 }
 
 export const GetPaymentStatusRequest: MessageFns<GetPaymentStatusRequest> = {
   encode(message: GetPaymentStatusRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.orderId !== "") {
-      writer.uint32(10).string(message.orderId);
+    if (message.paymentId !== "") {
+      writer.uint32(10).string(message.paymentId);
     }
     return writer;
   },
@@ -447,7 +447,7 @@ export const GetPaymentStatusRequest: MessageFns<GetPaymentStatusRequest> = {
             break;
           }
 
-          message.orderId = reader.string();
+          message.paymentId = reader.string();
           continue;
         }
       }

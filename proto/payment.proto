@@ -48,7 +48,7 @@ message ProcessPaymentEventResponse {
 }
 
 message GetPaymentStatusRequest {
-  string order_id = 1;
+  string payment_id = 1;
 }
 
 message GetPaymentStatusResponse {
