@@ -13,7 +13,7 @@ import { Observable } from "rxjs";
 export const protobufPackage = "refund.v1";
 
 export interface CreateRefundRequest {
-  orderId: string;
+  bookingId: string;
   userId: string;
 }
 
@@ -35,13 +35,13 @@ export interface ProcessRefundEventResponse {
 export const REFUND_V1_PACKAGE_NAME = "refund.v1";
 
 function createBaseCreateRefundRequest(): CreateRefundRequest {
-  return { orderId: "", userId: "" };
+  return { bookingId: "", userId: "" };
 }
 
 export const CreateRefundRequest: MessageFns<CreateRefundRequest> = {
   encode(message: CreateRefundRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.orderId !== "") {
-      writer.uint32(10).string(message.orderId);
+    if (message.bookingId !== "") {
+      writer.uint32(10).string(message.bookingId);
     }
     if (message.userId !== "") {
       writer.uint32(18).string(message.userId);
@@ -61,7 +61,7 @@ export const CreateRefundRequest: MessageFns<CreateRefundRequest> = {
             break;
           }
 
-          message.orderId = reader.string();
+          message.bookingId = reader.string();
           continue;
         }
         case 2: {
