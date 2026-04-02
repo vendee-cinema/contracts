@@ -14,6 +14,7 @@
     "./media": "./dist/media.js",
     "./movie": "./dist/movie.js",
     "./payment": "./dist/payment.js",
+    "./refund": "./dist/refund.js",
     "./seat": "./dist/seat.js",
     "./session": "./dist/session.js",
     "./theater": "./dist/theater.js",
