@@ -8,6 +8,7 @@
     ".": "./dist/index.js",
     "./account": "./dist/account.js",
     "./auth": "./dist/auth.js",
+    "./booking": "./dist/booking.js",
     "./category": "./dist/category.js",
     "./hall": "./dist/hall.js",
     "./empty": "./dist/empty.js",

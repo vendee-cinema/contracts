@@ -44,6 +44,7 @@ export interface Movie {
   slug: string;
   duration: number;
   banner: string;
+  poster: string;
 }
 
 export interface CreateSessionRequest {
@@ -344,7 +345,7 @@ export const Seat: MessageFns<Seat> = {
 };
 
 function createBaseMovie(): Movie {
-  return { id: "", title: "", slug: "", duration: 0, banner: "" };
+  return { id: "", title: "", slug: "", duration: 0, banner: "", poster: "" };
 }
 
 export const Movie: MessageFns<Movie> = {
@@ -363,6 +364,9 @@ export const Movie: MessageFns<Movie> = {
     }
     if (message.banner !== "") {
       writer.uint32(42).string(message.banner);
+    }
+    if (message.poster !== "") {
+      writer.uint32(50).string(message.poster);
     }
     return writer;
   },
@@ -412,6 +416,14 @@ export const Movie: MessageFns<Movie> = {
           }
 
           message.banner = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.poster = reader.string();
           continue;
         }
       }

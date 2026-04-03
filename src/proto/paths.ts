@@ -3,6 +3,7 @@ import { join } from 'path';
 export const PROTO_PATHS = {
   ACCOUNT: join(__dirname, '../../proto/account.proto'),
   AUTH: join(__dirname, '../../proto/auth.proto'),
+  BOOKING: join(__dirname, '../../proto/booking.proto'),
   CATEGORY: join(__dirname, '../../proto/category.proto'),
   HALL: join(__dirname, '../../proto/hall.proto'),
   MEDIA: join(__dirname, '../../proto/media.proto'),
