@@ -93,6 +93,5 @@ message ListReservedSeatsRequest {
 }
 
 message ListReservedSeatsResponse {
-  bool            ok                = 1;
   repeated string reserved_seat_ids = 2;
 }

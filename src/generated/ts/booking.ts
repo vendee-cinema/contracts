@@ -94,7 +94,6 @@ export interface ListReservedSeatsRequest {
 }
 
 export interface ListReservedSeatsResponse {
-  ok: boolean;
   reservedSeatIds: string[];
 }
 
@@ -887,14 +886,11 @@ export const ListReservedSeatsRequest: MessageFns<ListReservedSeatsRequest> = {
 };
 
 function createBaseListReservedSeatsResponse(): ListReservedSeatsResponse {
-  return { ok: false, reservedSeatIds: [] };
+  return { reservedSeatIds: [] };
 }
 
 export const ListReservedSeatsResponse: MessageFns<ListReservedSeatsResponse> = {
   encode(message: ListReservedSeatsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.ok !== false) {
-      writer.uint32(8).bool(message.ok);
-    }
     for (const v of message.reservedSeatIds) {
       writer.uint32(18).string(v!);
     }
@@ -908,14 +904,6 @@ export const ListReservedSeatsResponse: MessageFns<ListReservedSeatsResponse> = 
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.ok = reader.bool();
-          continue;
-        }
         case 2: {
           if (tag !== 18) {
             break;
